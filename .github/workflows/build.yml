@@ -2,9 +2,9 @@ name: Build SS-TOOLS
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, initial-base]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, initial-base]
   release:
     types: [created]
   workflow_dispatch:
