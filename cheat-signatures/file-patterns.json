@@ -1,0 +1,146 @@
+{
+  "version": "1.0.0",
+  "suspicious_extensions": [".dll", ".ahk", ".exe", ".inject", ".hack", ".cheat"],
+  "suspicious_filenames": [
+    "198macro",
+    "zenithmacro",
+    "crystalspkmacro",
+    "autoclicker",
+    "aimassist",
+    "triggerbot",
+    "killaura",
+    "autocrystal",
+    "anchormacro",
+    "injector",
+    "dll_inject",
+    "cheat",
+    "hack",
+    "exploit",
+    "bypass",
+    "macro",
+    "clicker"
+  ],
+  "mod_file_extensions": [".jar", ".zip", ".litemod", ".disabled"],
+  "launcher_paths": {
+    "zalith": {
+      "name": "Zalith Launcher",
+      "base_paths": [
+        "%APPDATA%/.zalith",
+        "%APPDATA%/ZalithLauncher",
+        "%USERPROFILE%/.zalith"
+      ],
+      "mods_relative": "versions/{version}/mods",
+      "logs_relative": "versions/{version}/logs",
+      "versions_relative": "versions",
+      "version_isolation": true,
+      "notes": "Version isolation must be enabled for per-version scanning"
+    },
+    "mojo": {
+      "name": "Mojo Launcher",
+      "base_paths": [
+        "%APPDATA%/.mojo",
+        "%APPDATA%/MojoLauncher"
+      ],
+      "mods_relative": "instances/{instance}/mods",
+      "logs_relative": "instances/{instance}/logs",
+      "versions_relative": "instances",
+      "version_isolation": true,
+      "notes": "Instance mode is always on in Mojo Launcher"
+    },
+    "modrinth": {
+      "name": "Modrinth Launcher",
+      "base_paths": [
+        "%APPDATA%/com.modrinth.theseus",
+        "%APPDATA%/ModrinthApp"
+      ],
+      "mods_relative": "profiles/{profile}/mods",
+      "logs_relative": "profiles/{profile}/logs",
+      "versions_relative": "profiles",
+      "version_isolation": true,
+      "notes": "Uses profile-based isolation"
+    },
+    "vanilla": {
+      "name": "Minecraft (Vanilla/Default)",
+      "base_paths": [
+        "%APPDATA%/.minecraft"
+      ],
+      "mods_relative": "mods",
+      "logs_relative": "logs",
+      "versions_relative": "versions",
+      "version_isolation": false,
+      "notes": "Default Minecraft launcher"
+    },
+    "curseforge": {
+      "name": "CurseForge",
+      "base_paths": [
+        "%USERPROFILE%/curseforge/minecraft",
+        "%APPDATA%/curseforge/minecraft"
+      ],
+      "mods_relative": "Instances/{instance}/mods",
+      "logs_relative": "Instances/{instance}/logs",
+      "versions_relative": "Instances",
+      "version_isolation": true,
+      "notes": "CurseForge instance isolation"
+    },
+    "prism": {
+      "name": "Prism Launcher",
+      "base_paths": [
+        "%APPDATA%/PrismLauncher",
+        "%LOCALAPPDATA%/PrismLauncher"
+      ],
+      "mods_relative": "instances/{instance}/.minecraft/mods",
+      "logs_relative": "instances/{instance}/.minecraft/logs",
+      "versions_relative": "instances",
+      "version_isolation": true,
+      "notes": "Prism Launcher (MultiMC fork)"
+    },
+    "multimc": {
+      "name": "MultiMC",
+      "base_paths": [
+        "%APPDATA%/MultiMC",
+        "%LOCALAPPDATA%/MultiMC"
+      ],
+      "mods_relative": "instances/{instance}/.minecraft/mods",
+      "logs_relative": "instances/{instance}/.minecraft/logs",
+      "versions_relative": "instances",
+      "version_isolation": true,
+      "notes": "MultiMC instance-based launcher"
+    },
+    "lunar": {
+      "name": "Lunar Client",
+      "base_paths": [
+        "%USERPROFILE%/.lunarclient",
+        "%APPDATA%/.lunarclient"
+      ],
+      "mods_relative": "offline/{version}/mods",
+      "logs_relative": "offline/{version}/logs",
+      "versions_relative": "offline",
+      "version_isolation": true,
+      "notes": "Lunar Client offline mode"
+    },
+    "badlion": {
+      "name": "Badlion Client",
+      "base_paths": [
+        "%APPDATA%/Badlion Client",
+        "%APPDATA%/.badlion"
+      ],
+      "mods_relative": "mods",
+      "logs_relative": "logs",
+      "versions_relative": "versions",
+      "version_isolation": false,
+      "notes": "Badlion Client"
+    },
+    "feather": {
+      "name": "Feather Client",
+      "base_paths": [
+        "%APPDATA%/Feather",
+        "%APPDATA%/.feather"
+      ],
+      "mods_relative": "mods",
+      "logs_relative": "logs",
+      "versions_relative": "versions",
+      "version_isolation": false,
+      "notes": "Feather Client"
+    }
+  }
+}

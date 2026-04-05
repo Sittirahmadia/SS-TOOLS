@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:;">
+  <title>SS-TOOLS — Minecraft Cheat Detector</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">&#x1F50D;</span>
+          <h1>SS-TOOLS</h1>
+        </div>
+        <p class="subtitle">Cheat Detector</p>
+      </div>
+
+      <div class="nav-items">
+        <button class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+          <span class="nav-icon">&#x1F3E0;</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="mod-scanner" onclick="switchTab('mod-scanner')">
+          <span class="nav-icon">&#x1F4E6;</span>
+          <span>Mod Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="log-scanner" onclick="switchTab('log-scanner')">
+          <span class="nav-icon">&#x1F4DC;</span>
+          <span>Log Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="process-scanner" onclick="switchTab('process-scanner')">
+          <span class="nav-icon">&#x2699;</span>
+          <span>Process Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="deleted-scanner" onclick="switchTab('deleted-scanner')">
+          <span class="nav-icon">&#x1F5D1;</span>
+          <span>Deleted Files</span>
+        </button>
+        <button class="nav-item" data-tab="string-scanner" onclick="switchTab('string-scanner')">
+          <span class="nav-icon">&#x1F50E;</span>
+          <span>String Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="launchers" onclick="switchTab('launchers')">
+          <span class="nav-icon">&#x1F3AE;</span>
+          <span>Launchers</span>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <p>v1.0.0</p>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="content">
+      <!-- Dashboard -->
+      <div class="tab-content active" id="tab-dashboard">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+          <p>Scan all Minecraft launchers for cheats, mods, and suspicious activity</p>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn btn-primary btn-large" onclick="runFullScan()">
+            <span>&#x1F50D;</span> Full Auto Scan
+          </button>
+          <button class="btn btn-secondary" onclick="detectLaunchers()">
+            <span>&#x1F3AE;</span> Detect Launchers
+          </button>
+          <button class="btn btn-secondary" onclick="exportReport()">
+            <span>&#x1F4BE;</span> Export Report
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" id="stat-launchers">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Launchers Found</div>
+          </div>
+          <div class="stat-card" id="stat-mods">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Mods Scanned</div>
+          </div>
+          <div class="stat-card" id="stat-detections">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Detections</div>
+          </div>
+          <div class="stat-card" id="stat-status">
+            <div class="stat-value status-clean">READY</div>
+            <div class="stat-label">Status</div>
+          </div>
+        </div>
+
+        <div id="scan-progress" class="progress-container" style="display:none;">
+          <div class="progress-text">Scanning...</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="progress-detail" id="progress-detail"></div>
+        </div>
+
+        <div id="dashboard-results"></div>
+      </div>
+
+      <!-- Mod Scanner -->
+      <div class="tab-content" id="tab-mod-scanner">
+        <div class="page-header">
+          <h2>Mod Scanner</h2>
+          <p>Scan .jar and .zip mod files for cheat keywords and suspicious content</p>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanModsFolder()">
+            <span>&#x1F4C1;</span> Scan Mods Folder
+          </button>
+          <button class="btn btn-secondary" onclick="scanSingleMod()">
+            <span>&#x1F4C4;</span> Scan Single File
+          </button>
+        </div>
+
+        <div class="info-box">
+          <p><strong>Supported formats:</strong> .jar, .zip, .litemod</p>
+          <p><strong>Max folder size:</strong> 500MB</p>
+          <p>The scanner inspects mod archives for cheat-related keywords in class files, configs, and metadata.</p>
+        </div>
+
+        <div id="mod-results"></div>
+      </div>
+
+      <!-- Log Scanner -->
+      <div class="tab-content" id="tab-log-scanner">
+        <div class="page-header">
+          <h2>Log Scanner</h2>
+          <p>Scan Minecraft log files for cheat client indicators</p>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanLogsFolder()">
+            <span>&#x1F4C1;</span> Scan Logs Folder
+          </button>
+        </div>
+
+        <div class="info-box">
+          <p>Detects known cheat client log signatures, module toggle patterns, and suspicious mod loading events.</p>
+        </div>
+
+        <div id="log-results"></div>
+      </div>
+
+      <!-- Process Scanner -->
+      <div class="tab-content" id="tab-process-scanner">
+        <div class="page-header">
+          <h2>Process Scanner</h2>
+          <p>Scan running processes and task manager for hidden cheat tools</p>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanProcesses()">
+            <span>&#x2699;</span> Scan Processes
+          </button>
+        </div>
+
+        <div class="info-box">
+          <p>Scans all running processes including command lines and executable paths. Detects hidden macro tools (198macro, zenithmacro), injectors, AutoHotkey, and cheat clients.</p>
+        </div>
+
+        <div id="process-results"></div>
+      </div>
+
+      <!-- Deleted File Scanner -->
+      <div class="tab-content" id="tab-deleted-scanner">
+        <div class="page-header">
+          <h2>Deleted File Scanner</h2>
+          <p>Detect previously deleted cheat files — even if removed before opening this app</p>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanDeletedFiles()">
+            <span>&#x1F5D1;</span> Scan Deleted Files
+          </button>
+        </div>
+
+        <div class="info-box">
+          <p><strong>Scans multiple sources:</strong></p>
+          <ul>
+            <li>Windows Recycle Bin</li>
+            <li>NTFS USN Journal (requires admin)</li>
+            <li>Windows Prefetch (previously run programs)</li>
+            <li>Recent Files history</li>
+            <li>PowerShell command history</li>
+          </ul>
+        </div>
+
+        <div id="deleted-results"></div>
+      </div>
+
+      <!-- String Scanner -->
+      <div class="tab-content" id="tab-string-scanner">
+        <div class="page-header">
+          <h2>String & Binary Scanner</h2>
+          <p>Deep scan executables, DLLs, and scripts for injection patterns and cheat strings</p>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanStringsFolder()">
+            <span>&#x1F4C1;</span> Scan Directory
+          </button>
+          <button class="btn btn-secondary" onclick="scanBinaryFile()">
+            <span>&#x1F4C4;</span> Scan Single File
+          </button>
+        </div>
+
+        <div class="info-box">
+          <p>Extracts and analyzes strings from binary files (.exe, .dll, .ahk, .bat, .ps1). Detects DLL injection patterns, memory manipulation APIs, and known cheat tool references.</p>
+        </div>
+
+        <div id="string-results"></div>
+      </div>
+
+      <!-- Launchers -->
+      <div class="tab-content" id="tab-launchers">
+        <div class="page-header">
+          <h2>Launcher Detection</h2>
+          <p>Detect installed Minecraft launchers and their data directories</p>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="detectLaunchers()">
+            <span>&#x1F3AE;</span> Detect Launchers
+          </button>
+        </div>
+
+        <div class="info-box">
+          <p><strong>Supported launchers:</strong> Zalith, Mojo, Modrinth, Vanilla, CurseForge, Prism, MultiMC, Lunar Client, Badlion, Feather</p>
+          <p>Automatically finds mods folders, log directories, and installed versions/instances.</p>
+        </div>
+
+        <div id="launcher-results"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
