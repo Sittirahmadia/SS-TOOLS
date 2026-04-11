@@ -3,129 +3,208 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SS-TOOLS Web — Minecraft Cheat Detector</title>
+  <title>SS-TOOLS v2.0 -- Minecraft SS AntiCheat Scanner (Native Mode)</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Web-specific overrides */
-    body { overflow: auto; }
-    #sidebar { display: none; }
-    #content { padding: 24px; max-width: 1000px; margin: 0 auto; }
-    .tab-content { display: block !important; }
-    .web-header {
-      text-align: center;
-      padding: 40px 20px 32px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 32px;
-    }
-    .web-header h1 {
-      font-size: 32px;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .web-header p {
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
-    .web-section {
-      margin-bottom: 40px;
-    }
-    .web-section h2 {
-      font-size: 20px;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-  </style>
 </head>
 <body>
   <div id="app">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <canvas id="logo-cube" width="32" height="32"></canvas>
+          <h1>SS-TOOLS</h1>
+        </div>
+        <p class="subtitle">AntiCheat Scanner v2.0</p>
+      </div>
+
+      <div class="nav-items">
+        <button class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+          <span class="nav-icon">&#x1F3E0;</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="mod-scanner" onclick="switchTab('mod-scanner')">
+          <span class="nav-icon">&#x1F4E6;</span>
+          <span>Mod Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="jar-scanner" onclick="switchTab('jar-scanner')">
+          <span class="nav-icon">&#x2615;</span>
+          <span>JAR Deep Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="log-scanner" onclick="switchTab('log-scanner')">
+          <span class="nav-icon">&#x1F4DC;</span>
+          <span>Log Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="process-scanner" onclick="switchTab('process-scanner')">
+          <span class="nav-icon">&#x2699;</span>
+          <span>Process Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="dll-scanner" onclick="switchTab('dll-scanner')">
+          <span class="nav-icon">&#x1F4BF;</span>
+          <span>DLL Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="mouse-scanner" onclick="switchTab('mouse-scanner')">
+          <span class="nav-icon">&#x1F5B1;</span>
+          <span>Mouse Software</span>
+        </button>
+        <button class="nav-item" data-tab="browser-scanner" onclick="switchTab('browser-scanner')">
+          <span class="nav-icon">&#x1F310;</span>
+          <span>Browser Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="kernel-scanner" onclick="switchTab('kernel-scanner')">
+          <span class="nav-icon">&#x1F6E1;</span>
+          <span>Kernel Check</span>
+        </button>
+        <button class="nav-item" data-tab="memory-scanner" onclick="switchTab('memory-scanner')">
+          <span class="nav-icon">&#x1F9E0;</span>
+          <span>Memory Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="deleted-scanner" onclick="switchTab('deleted-scanner')">
+          <span class="nav-icon">&#x1F5D1;</span>
+          <span>Deleted Files</span>
+        </button>
+        <button class="nav-item" data-tab="string-scanner" onclick="switchTab('string-scanner')">
+          <span class="nav-icon">&#x1F50E;</span>
+          <span>String Scanner</span>
+        </button>
+        <button class="nav-item" data-tab="launchers" onclick="switchTab('launchers')">
+          <span class="nav-icon">&#x1F3AE;</span>
+          <span>Launchers</span>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="admin-badge admin-no">Native Mode</div>
+        <p>v2.0.0</p>
+      </div>
+    </nav>
+
+    <!-- Main Content - same as index.html -->
     <main id="content">
-      <div class="web-header">
-        <h1>SS-TOOLS</h1>
-        <p>Minecraft Cheat Detector — Web Version</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">Upload mod files, folders, or binaries to scan for cheats. Max 500MB per upload.</p>
-      </div>
-
-      <!-- Mod File Upload Scanner -->
-      <div class="web-section">
-        <h2>Mod File Scanner</h2>
-        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">
-          Upload .jar, .zip, or .litemod files to scan for cheat keywords in class files, configs, and metadata.
-        </p>
-
-        <div class="upload-zone" id="mod-upload-zone" onclick="document.getElementById('mod-file-input').click()">
-          <div class="upload-icon">&#x1F4E6;</div>
-          <div class="upload-text">Click to upload or drag &amp; drop mod files here</div>
-          <div class="upload-limit">.jar, .zip, .litemod — Max 500MB total</div>
+      <div class="tab-content active" id="tab-dashboard">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+          <p>Full system SS scan -- all Minecraft launchers, processes, DLLs, drivers, and more</p>
         </div>
-        <input type="file" id="mod-file-input" multiple accept=".jar,.zip,.litemod" style="display:none;" onchange="handleModUpload(event)">
-
-        <div id="web-mod-results"></div>
-      </div>
-
-      <!-- Binary/String Scanner -->
-      <div class="web-section">
-        <h2>Binary &amp; String Scanner</h2>
-        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">
-          Upload .exe, .dll, .ahk, or other binary files to scan for injection patterns and cheat strings.
-        </p>
-
-        <div class="upload-zone" id="binary-upload-zone" onclick="document.getElementById('binary-file-input').click()">
-          <div class="upload-icon">&#x1F50E;</div>
-          <div class="upload-text">Click to upload or drag &amp; drop binary files here</div>
-          <div class="upload-limit">.exe, .dll, .ahk, .bat, .ps1 — Max 500MB total</div>
+        <div id="visualization-container">
+          <canvas id="three-canvas"></canvas>
+          <div id="viz-overlay">
+            <div id="viz-status">READY</div>
+            <div id="viz-detail"></div>
+          </div>
         </div>
-        <input type="file" id="binary-file-input" multiple accept=".exe,.dll,.ahk,.bat,.cmd,.ps1,.vbs" style="display:none;" onchange="handleBinaryUpload(event)">
-
-        <div id="web-binary-results"></div>
-      </div>
-
-      <!-- Log Scanner -->
-      <div class="web-section">
-        <h2>Log Scanner</h2>
-        <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">
-          Upload Minecraft log files (.log, .txt) to scan for cheat client indicators.
-        </p>
-
-        <div class="upload-zone" id="log-upload-zone" onclick="document.getElementById('log-file-input').click()">
-          <div class="upload-icon">&#x1F4DC;</div>
-          <div class="upload-text">Click to upload or drag &amp; drop log files here</div>
-          <div class="upload-limit">.log, .txt — Max 50MB per file</div>
+        <div class="action-bar">
+          <button class="btn btn-primary btn-large pulse-glow" onclick="runFullScan()">
+            <span>&#x1F50D;</span> Full System SS Scan
+          </button>
+          <button class="btn btn-secondary" onclick="detectLaunchers()">
+            <span>&#x1F3AE;</span> Detect Launchers
+          </button>
+          <button class="btn btn-secondary" onclick="exportReport()">
+            <span>&#x1F4BE;</span> Export HTML Report
+          </button>
         </div>
-        <input type="file" id="log-file-input" multiple accept=".log,.txt" style="display:none;" onchange="handleLogUpload(event)">
-
-        <div id="web-log-results"></div>
+        <div class="stats-grid">
+          <div class="stat-card" id="stat-launchers"><div class="stat-value">-</div><div class="stat-label">Launchers Found</div></div>
+          <div class="stat-card" id="stat-mods"><div class="stat-value">-</div><div class="stat-label">Mods Scanned</div></div>
+          <div class="stat-card" id="stat-processes"><div class="stat-value">-</div><div class="stat-label">Processes Scanned</div></div>
+          <div class="stat-card" id="stat-detections"><div class="stat-value">-</div><div class="stat-label">Detections</div></div>
+          <div class="stat-card" id="stat-status"><div class="stat-value status-clean">READY</div><div class="stat-label">Status</div></div>
+        </div>
+        <div id="scan-progress" class="progress-container" style="display:none;">
+          <div class="progress-text">Scanning...</div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          <div class="progress-detail" id="progress-detail"></div>
+        </div>
+        <div id="threat-graph" style="display:none;"><canvas id="threat-canvas" width="800" height="200"></canvas></div>
+        <div id="dashboard-results"></div>
       </div>
 
-      <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:12px;">
-        <p>SS-TOOLS v1.0.0 — For full scanning (processes, deleted files, launcher detection), use the desktop app.</p>
-        <p style="margin-top:4px;">
-          <a href="https://github.com/Sittirahmadia/SS-TOOLS/releases" style="color:var(--accent);">Download Desktop App</a>
-        </p>
+      <div class="tab-content" id="tab-mod-scanner">
+        <div class="page-header"><h2>Mod Scanner</h2><p>Scan .jar and .zip mod files for cheat keywords</p></div>
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanModsFolder()"><span>&#x1F4C1;</span> Scan Mods Folder</button>
+          <button class="btn btn-secondary" onclick="scanSingleMod()"><span>&#x1F4C4;</span> Scan Single File</button>
+        </div>
+        <div id="mod-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-jar-scanner">
+        <div class="page-header"><h2>JAR Deep Scanner</h2><p>Deep bytecode analysis of .jar files</p></div>
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanJarDeep()"><span>&#x2615;</span> Scan Single JAR</button>
+          <button class="btn btn-secondary" onclick="scanMinecraftDir()"><span>&#x1F4C1;</span> Scan .minecraft Directory</button>
+        </div>
+        <div id="jar-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-log-scanner">
+        <div class="page-header"><h2>Log Scanner</h2><p>Scan Minecraft log files</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanLogsFolder()"><span>&#x1F4C1;</span> Scan Logs Folder</button></div>
+        <div id="log-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-process-scanner">
+        <div class="page-header"><h2>Process Scanner</h2><p>Scan running processes</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanProcesses()"><span>&#x2699;</span> Scan Processes</button></div>
+        <div id="process-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-dll-scanner">
+        <div class="page-header"><h2>DLL Scanner</h2><p>Enumerate loaded DLLs</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanDLLs()"><span>&#x1F4BF;</span> Scan All DLLs</button></div>
+        <div id="dll-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-mouse-scanner">
+        <div class="page-header"><h2>Mouse Software Scanner</h2><p>Detect gaming mouse software macros</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanMouseSoftware()"><span>&#x1F5B1;</span> Scan Mouse Software</button></div>
+        <div id="mouse-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-browser-scanner">
+        <div class="page-header"><h2>Browser Scanner</h2><p>Scan browsers for cheat activity</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanBrowserHistory()"><span>&#x1F310;</span> Scan All Browsers</button></div>
+        <div id="browser-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-kernel-scanner">
+        <div class="page-header"><h2>Kernel Driver Scanner</h2><p>Full kernel-mode driver scan</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanKernelDrivers()"><span>&#x1F6E1;</span> Scan Kernel Drivers</button></div>
+        <div id="kernel-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-memory-scanner">
+        <div class="page-header"><h2>Memory Scanner</h2><p>Scan Java/Minecraft process memory maps</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanMemoryProcesses()"><span>&#x1F9E0;</span> Scan Java Memory</button></div>
+        <div id="memory-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-deleted-scanner">
+        <div class="page-header"><h2>Deleted File Scanner</h2><p>Detect previously deleted cheat files</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="scanDeletedFiles()"><span>&#x1F5D1;</span> Scan Deleted Files</button></div>
+        <div id="deleted-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-string-scanner">
+        <div class="page-header"><h2>String Scanner</h2><p>Deep binary string analysis</p></div>
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanStringDir()"><span>&#x1F4C1;</span> Scan Directory</button>
+          <button class="btn btn-secondary" onclick="scanBinaryFile()"><span>&#x1F4C4;</span> Scan Single File</button>
+        </div>
+        <div id="string-results"></div>
+      </div>
+
+      <div class="tab-content" id="tab-launchers">
+        <div class="page-header"><h2>Launcher Detection</h2><p>Detect installed Minecraft launchers</p></div>
+        <div class="action-bar"><button class="btn btn-primary" onclick="detectLaunchers()"><span>&#x1F3AE;</span> Detect Launchers</button></div>
+        <div id="launcher-results"></div>
       </div>
     </main>
   </div>
 
   <script src="web-scanner.js"></script>
-  <script>
-    // Drag & drop handling
-    ['mod-upload-zone', 'binary-upload-zone', 'log-upload-zone'].forEach(id => {
-      const zone = document.getElementById(id);
-      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
-      zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
-      zone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        zone.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        if (id === 'mod-upload-zone') processModFiles(files);
-        else if (id === 'binary-upload-zone') processBinaryFiles(files);
-        else if (id === 'log-upload-zone') processLogFiles(files);
-      });
-    });
-
-    function handleModUpload(event) { processModFiles(event.target.files); }
-    function handleBinaryUpload(event) { processBinaryFiles(event.target.files); }
-    function handleLogUpload(event) { processLogFiles(event.target.files); }
-  </script>
+  <script src="three-viz.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

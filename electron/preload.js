@@ -33,6 +33,9 @@ contextBridge.exposeInMainWorld('sstools', {
   // DLL scanning
   scanDLLs: () => ipcRenderer.invoke('scan-dlls'),
 
+  // Memory scanning
+  scanMemory: () => ipcRenderer.invoke('scan-memory'),
+
   // JAR deep scanning
   scanJar: (filePath) => ipcRenderer.invoke('scan-jar', filePath),
   scanJarDirectory: (mcDir) => ipcRenderer.invoke('scan-jar-directory', mcDir),

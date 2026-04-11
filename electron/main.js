@@ -18,6 +18,8 @@ const kernelScanner = require('../scanners/kernel-scanner');
 const dllScanner = require('../scanners/dll-scanner');
 const jarScanner = require('../scanners/jar-scanner');
 const reportGenerator = require('../scanners/report-generator');
+const keywordEngine = require('../scanners/keyword-engine');
+const memoryScanner = require('../scanners/memory-scanner');
 
 let mainWindow;
 let tray = null;
@@ -286,6 +288,16 @@ ipcMain.handle('scan-jar', async (_event, filePath) => {
   }
 });
 
+// Memory scanner
+ipcMain.handle('scan-memory', async () => {
+  try {
+    const results = memoryScanner.scanMemory();
+    return { success: true, data: results };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+});
+
 // JAR deep scan entire .minecraft directory
 ipcMain.handle('scan-jar-directory', async (_event, mcDir) => {
   try {
@@ -311,6 +323,7 @@ ipcMain.handle('full-scan', async () => {
     mouseScans: null,
     browserScans: null,
     kernelScans: null,
+    memoryScans: null,
     overallStatus: 'clean',
     totalDetections: 0
   };
@@ -390,6 +403,14 @@ ipcMain.handle('full-scan', async () => {
       results.totalDetections += results.kernelScans.totalDetections;
     } catch (err) {
       results.kernelScans = { error: err.message, totalDetections: 0 };
+    }
+
+    // Step 11: Memory scanner (Java process memory maps)
+    try {
+      results.memoryScans = memoryScanner.scanMemory();
+      results.totalDetections += results.memoryScans.totalDetections;
+    } catch (err) {
+      results.memoryScans = { error: err.message, totalDetections: 0 };
     }
 
     results.endTime = new Date().toISOString();

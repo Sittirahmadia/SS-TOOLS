@@ -4,7 +4,8 @@
   "description": "SS-TOOLS v2.0 -- Minecraft SS AntiCheat Scanner for Windows",
   "main": "electron/main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "node server.js",
+    "start:electron": "electron .",
     "build": "electron-builder --win --x64",
     "build:portable": "electron-builder --win portable --x64",
     "build:installer": "electron-builder --win nsis --x64"

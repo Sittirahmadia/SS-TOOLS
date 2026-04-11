@@ -637,6 +637,23 @@ async function scanKernelDrivers() {
   setScanning(false);
 }
 
+async function scanMemoryProcesses() {
+  if (isScanning) return;
+  setScanning(true);
+  showProgress('Scanning Java process memory...', 'Inspecting JVM arguments, modules, and memory strings...');
+  try {
+    const result = await window.sstools.scanMemory();
+    hideProgress();
+    document.getElementById('memory-results').innerHTML = result.success
+      ? renderMemoryResults(result.data)
+      : renderError(result.error);
+  } catch (err) {
+    hideProgress();
+    document.getElementById('memory-results').innerHTML = renderError(err.message);
+  }
+  setScanning(false);
+}
+
 async function scanDeletedFiles() {
   if (isScanning) return;
   setScanning(true);
@@ -968,6 +985,61 @@ function renderDeletedResults(data) {
     html += '</div>';
   }
   return renderResultSection('Deleted File Results', badgeClass, dets > 0 ? `${dets} found` : 'Clean', html);
+}
+
+function renderMemoryResults(data) {
+  const dets = data.totalDetections || 0;
+  const badgeClass = dets > 0 ? 'badge-detected' : 'badge-clean';
+  let html = `<div class="detection-detail">
+    Java processes found: ${(data.javaProcesses || []).length}
+  </div>`;
+
+  for (const proc of (data.javaProcesses || [])) {
+    html += `<div class="detection-item">
+      <div class="detection-detail">${escapeHtml(proc.name)} (PID: ${proc.pid})</div>
+    </div>`;
+  }
+
+  for (const det of (data.jvmArgDetections || [])) {
+    html += `<div class="detection-item severity-${det.severity}">
+      <div class="detection-title">[JVM Args] ${escapeHtml(det.description)}</div>
+      <div class="detection-detail">
+        PID: ${det.pid} | <span class="detection-tag tag-${det.severity}">${det.severity}</span>
+        ${det.match ? `Match: ${escapeHtml(det.match)}` : ''}
+      </div>
+    </div>`;
+  }
+
+  for (const det of (data.moduleDetections || [])) {
+    html += `<div class="detection-item severity-${det.severity}">
+      <div class="detection-title">[Module] ${escapeHtml(det.module || '')}</div>
+      <div class="detection-detail">
+        PID: ${det.pid} | <span class="detection-tag tag-${det.severity}">${det.severity}</span>
+        ${escapeHtml(det.description)}
+      </div>
+    </div>`;
+  }
+
+  for (const det of (data.memoryStringDetections || [])) {
+    html += `<div class="detection-item severity-${det.severity}">
+      <div class="detection-title">[Memory String] ${escapeHtml(det.description)}</div>
+      <div class="detection-detail">
+        PID: ${det.pid} | <span class="detection-tag tag-${det.severity}">${det.severity}</span>
+        Match type: ${det.matchType} | Score: ${det.score ? det.score.toFixed(2) : 'N/A'}
+      </div>
+    </div>`;
+  }
+
+  for (const det of (data.agentDetections || [])) {
+    html += `<div class="detection-item severity-critical">
+      <div class="detection-title">[Java Agent] ${escapeHtml(det.description)}</div>
+      <div class="detection-detail">
+        PID: ${det.pid} | <span class="detection-tag tag-critical">critical</span>
+      </div>
+    </div>`;
+  }
+
+  return renderResultSection('Memory Scanner', badgeClass, dets > 0 ? `${dets} found` : 'Clean', html);
 }
 
 function renderStringResults(data) {

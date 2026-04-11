@@ -15,6 +15,8 @@ const kernelScanner = require('./kernel-scanner');
 const dllScanner = require('./dll-scanner');
 const jarScanner = require('./jar-scanner');
 const reportGenerator = require('./report-generator');
+const keywordEngine = require('./keyword-engine');
+const memoryScanner = require('./memory-scanner');
 
 module.exports = {
   modScanner,
@@ -28,5 +30,7 @@ module.exports = {
   kernelScanner,
   dllScanner,
   jarScanner,
-  reportGenerator
+  reportGenerator,
+  keywordEngine,
+  memoryScanner
 };

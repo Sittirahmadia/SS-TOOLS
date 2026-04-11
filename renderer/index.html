@@ -56,6 +56,10 @@
           <span class="nav-icon">&#x1F6E1;</span>
           <span>Kernel Check</span>
         </button>
+        <button class="nav-item" data-tab="memory-scanner" onclick="switchTab('memory-scanner')">
+          <span class="nav-icon">&#x1F9E0;</span>
+          <span>Memory Scanner</span>
+        </button>
         <button class="nav-item" data-tab="deleted-scanner" onclick="switchTab('deleted-scanner')">
           <span class="nav-icon">&#x1F5D1;</span>
           <span>Deleted Files</span>
@@ -290,6 +294,24 @@
           <p>Uses driverquery, fltmc, and file system scanning. Detects Cheat Engine kernel drivers, KDMapper, exploit drivers (capcom.sys, iqvw64e.sys), input injection drivers, and hidden processes.</p>
         </div>
         <div id="kernel-results"></div>
+      </div>
+
+      <!-- Memory Scanner -->
+      <div class="tab-content" id="tab-memory-scanner">
+        <div class="page-header">
+          <h2>Memory Scanner</h2>
+          <p>Scan Java/Minecraft process memory maps, detect injected DLLs, Java agents, and in-memory cheat strings</p>
+        </div>
+        <div class="action-bar">
+          <button class="btn btn-primary" onclick="scanMemoryProcesses()">
+            <span>&#x1F9E0;</span> Scan Java Memory
+          </button>
+        </div>
+        <div class="info-box">
+          <p><strong>Multi-layer detection:</strong> Hash + Signature + Behavior + Memory + Bytecode</p>
+          <p>Scans JVM arguments for agent injection, enumerates loaded modules per Java process, and extracts in-memory strings using fuzzy/Levenshtein matching from the keyword engine.</p>
+        </div>
+        <div id="memory-results"></div>
       </div>
 
       <!-- Deleted File Scanner -->
