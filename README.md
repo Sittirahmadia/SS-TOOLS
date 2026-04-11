@@ -1,122 +1,110 @@
-# SS-TOOLS
+# SS-TOOLS v2.0 -- Minecraft SS AntiCheat Scanner
 
-Minecraft Cheat Detection Scanner for PC — an Electron desktop application + web version.
-
-SS-TOOLS scans Minecraft launcher data, mods, logs, running processes, and deleted files to detect cheats, macro tools, and injectors.
+A comprehensive Windows desktop application for detecting cheats, macros, and suspicious software during Minecraft screenshare (SS) inspections.
 
 ## Features
 
-- **Mod Scanner**: Scans .jar/.zip mod files for cheat keywords in class files, configs, and metadata
-- **Log Scanner**: Detects cheat client signatures and module toggle patterns in Minecraft logs
-- **Process Scanner**: Scans running processes and task manager for hidden cheat tools (198macro, zenithmacro, injectors, AutoHotkey)
-- **Deleted File Scanner**: Finds previously deleted cheat files via Recycle Bin, NTFS journal, Prefetch, Recent Files, and command history
-- **String/Binary Scanner**: Deep scans .exe, .dll, .ahk files for injection patterns and cheat strings
-- **Launcher Detection**: Auto-detects installed launchers (Zalith, Mojo, Modrinth, Vanilla, CurseForge, Prism, MultiMC, Lunar, Badlion, Feather)
-- **Full Auto Scan**: One-click scan of all detected launchers
-- **Web Version**: Upload-based scanning with drag & drop (no install needed)
-- **Export Reports**: Save scan results as JSON or text
+### Core Scanners
 
-## Supported Launchers
+| Scanner | Description |
+|---------|-------------|
+| **Mod Scanner** | Scans .jar/.zip mod files for cheat keywords in class files, configs, and metadata |
+| **JAR Deep Scanner** | Bytecode-level analysis of .class files -- detects obfuscated cheats, packet manipulation, kill-aura patterns, vanilla class modifications |
+| **Log Scanner** | Detects cheat client signatures, module toggles, and suspicious mod loading in Minecraft logs |
+| **Process Scanner** | Enumerates running processes for known cheat tools, macro software, injectors, and debuggers |
+| **DLL Scanner** | Full loaded-DLL enumeration per process with name matching, SHA-256 hashing, and binary string analysis |
+| **Mouse Software Scanner** | Detects Logitech, Razer, Bloody, Redragon, Corsair, SteelSeries, Glorious, ROCCAT -- scans macro profiles for auto-click and PvP macros |
+| **Browser Scanner** | Scans Chrome, Edge, Firefox, Brave download history, extensions, and bookmarks for cheat-related activity |
+| **Kernel Driver Scanner** | Full kernel-mode driver scan using driverquery and fltmc -- detects Cheat Engine drivers, exploit drivers, hidden processes |
+| **Deleted File Scanner** | Scans Recycle Bin, NTFS USN Journal, Windows Prefetch, Recent Files, and PowerShell history |
+| **String Scanner** | Deep binary string extraction and analysis of executables and DLLs |
 
-| Launcher | Version Isolation | Status |
-|----------|------------------|--------|
-| Zalith Launcher | Yes (must enable) | Supported |
-| Mojo Launcher | Yes (always on, called "instance") | Supported |
-| Modrinth Launcher | Yes (profiles) | Supported |
-| Minecraft (Vanilla) | No | Supported |
-| CurseForge | Yes (instances) | Supported |
-| Prism Launcher | Yes (instances) | Supported |
-| MultiMC | Yes (instances) | Supported |
-| Lunar Client | Yes (per-version) | Supported |
-| Badlion Client | No | Supported |
-| Feather Client | No | Supported |
+### Detection Techniques
 
-## Cheat Detection
+- **Multi-layer detection**: keyword matching + bytecode analysis + hash verification + memory string scanning
+- **Java bytecode parsing**: Reads .class constant pools to identify cheat class patterns, even when obfuscated
+- **Smart whitelisting**: Legitimate gaming software (Logitech G HUB, Razer Synapse, Corsair iCUE, SteelSeries GG) is recognized -- only suspicious macro configurations are flagged
+- **False positive prevention**: Context-aware keyword matching with per-keyword rules to minimize false flags
+- **Vanilla class modification detection**: Identifies when mods modify core Minecraft classes (Entity, Player, World)
 
-Detects cheats for Minecraft **1.21 — 1.21.11**, including:
+### GUI
 
-- **Crystal PvP**: AutoCrystal, CrystalAura, AnchorMacro, BedAura, CevBreak, AutoCity, HoleFill, PistonCrystal
-- **Sword PvP**: KillAura, AimAssist, Triggerbot, AutoClicker, Reach, Velocity, AntiKB, Criticals, BackTrack
-- **Movement**: SpeedHack, FlyHack, NoFall, NoSlow, Phase, NoClip, PacketFly, Scaffold
-- **Visual**: ESP, Tracers, Xray, FreeCam, Chams, Fullbright
-- **Utility**: AutoTotem, FastBreak, Nuker, Baritone, ChestStealer, Timer
-- **Known Clients**: Wurst, Impact, Meteor, Aristois, RusherHack, Lambda, Future, ThunderHack, BleachHack, GameSense, Konas, and more
-- **Macro Tools**: 198macro, ZenithMacro, CrystalSpKMacro, injectors, DLL injection
-- **Anti-Detection**: Anti-screenshare bypass tools
+- Modern dark-themed dashboard with real-time 3D Minecraft block visualization
+- One-click "Full System SS Scan" button
+- Real-time progress tracking with animated scan ring
+- Threat severity graph (critical/high/medium/low breakdown)
+- Individual scanner tabs for targeted scans
+- System tray support -- minimize to tray
+- HTML/JSON/TXT report export
 
-Max folder upload: **500MB**
+## Requirements
 
-## Building
+- **Windows 10/11** (64-bit)
+- **Administrator privileges** recommended for full scanning (kernel drivers, USN Journal, Prefetch)
+- **Node.js 18+** (for development)
 
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) v20+
-- Windows OS (for full scanning features)
-
-### Install & Run (Development)
+## Development
 
 ```bash
+# Install dependencies
 npm install
+
+# Run in development mode
 npm start
-```
 
-### Build .exe
-
-```bash
-# Build both installer and portable
-npm run build
-
-# Build portable only
-npm run build:portable
-
-# Build installer only
+# Build Windows installer
 npm run build:installer
+
+# Build portable executable
+npm run build:portable
 ```
-
-Built files will be in the `dist/` folder.
-
-### Automated Builds
-
-This repo includes a GitHub Actions workflow that automatically builds `.exe` files on every push and on releases. Download built artifacts from the **Actions** tab.
-
-## Web Version
-
-Open `renderer/web.html` in a browser for the web-based scanner. The web version supports:
-
-- Mod file upload scanning (.jar, .zip, .litemod)
-- Binary/string scanning (.exe, .dll, .ahk)
-- Log file scanning (.log, .txt)
-
-Note: Process scanning and deleted file scanning require the desktop app.
 
 ## Project Structure
 
 ```
 SS-TOOLS/
-├── electron/              # Electron main process
-│   ├── main.js            # App entry point
-│   └── preload.js         # Preload script (IPC bridge)
-├── scanners/              # Scanner modules
-│   ├── mod-scanner.js     # Mod file scanner
-│   ├── log-scanner.js     # Log file scanner
-│   ├── process-scanner.js # Process/task manager scanner
-│   ├── deleted-file-scanner.js  # Deleted file scanner
-│   ├── launcher-detector.js     # Launcher detection
-│   ├── string-scanner.js  # Binary string scanner
-│   └── index.js           # Module exports
-├── renderer/              # Frontend UI
-│   ├── index.html         # Desktop app UI
-│   ├── web.html           # Web version UI
-│   ├── styles.css         # Shared styles
-│   ├── app.js             # Desktop app logic
-│   └── web-scanner.js     # Web scanner logic
-├── cheat-signatures/      # Detection databases
-│   ├── keywords.json      # Cheat keyword database
-│   └── file-patterns.json # File patterns & launcher paths
-├── assets/                # Icons and images
-└── package.json
+  electron/
+    main.js          # Electron main process + IPC handlers
+    preload.js       # Context bridge for renderer
+  renderer/
+    index.html       # Main UI layout
+    app.js           # Application logic + scanner integrations
+    styles.css       # Dark theme CSS
+    three-viz.js     # 3D Minecraft block visualization engine
+  scanners/
+    mod-scanner.js        # Mod file keyword scanner
+    jar-scanner.js        # JAR deep bytecode scanner
+    log-scanner.js        # Minecraft log analyzer
+    process-scanner.js    # Running process detector
+    dll-scanner.js        # Loaded DLL enumerator
+    mouse-scanner.js      # Gaming mouse software scanner
+    browser-scanner.js    # Browser history/extension scanner
+    kernel-scanner.js     # Kernel driver scanner
+    deleted-file-scanner.js  # Deleted file forensics
+    string-scanner.js     # Binary string analyzer
+    launcher-detector.js  # Minecraft launcher detector
+    report-generator.js   # HTML/TXT report generator
+    index.js              # Scanner module exports
+  cheat-signatures/
+    keywords.json         # Cheat keyword database
+    file-patterns.json    # File patterns + launcher paths
+  assets/
+    icon.ico              # Application icon
 ```
 
-## Credits
+## Supported Launchers
 
-Built by **Sittirahmadia**
+Vanilla Minecraft, Zalith, Mojo, Modrinth, CurseForge, Prism Launcher, MultiMC, Lunar Client, Badlion Client, Feather Client
+
+## Detected Threats
+
+- **Cheat Clients**: Wurst, Meteor, Impact, Aristois, RusherHack, Future, ThunderHack, BleachHack, GameSense, Lambda, Inertia
+- **Macro Tools**: 198Macro, ZenithMacro, CrystalSpKMacro, AutoHotkey, OP Auto Clicker, GS Auto Clicker
+- **Cheat Modules**: KillAura, AimAssist, Triggerbot, AutoCrystal, Velocity/AntiKB, NoFall, Scaffold, ESP, X-Ray, Fly, Speed
+- **Injection Tools**: Cheat Engine, Process Hacker, x64dbg, DLL injectors
+- **Kernel Exploits**: KDMapper, Capcom.sys, mhyprot, dbk64 (Cheat Engine driver)
+- **Mouse Macros**: Bloody hardware macros, rapid-click profiles, jitter-click macros, PvP combo macros
+
+## License
+
+MIT

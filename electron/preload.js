@@ -21,6 +21,22 @@ contextBridge.exposeInMainWorld('sstools', {
   scanStrings: (dirPath) => ipcRenderer.invoke('scan-strings', dirPath),
   scanBinary: (filePath) => ipcRenderer.invoke('scan-binary', filePath),
 
+  // Mouse software scanning
+  scanMouse: () => ipcRenderer.invoke('scan-mouse'),
+
+  // Browser scanning
+  scanBrowsers: () => ipcRenderer.invoke('scan-browsers'),
+
+  // Kernel driver scanning
+  scanKernel: () => ipcRenderer.invoke('scan-kernel'),
+
+  // DLL scanning
+  scanDLLs: () => ipcRenderer.invoke('scan-dlls'),
+
+  // JAR deep scanning
+  scanJar: (filePath) => ipcRenderer.invoke('scan-jar', filePath),
+  scanJarDirectory: (mcDir) => ipcRenderer.invoke('scan-jar-directory', mcDir),
+
   // Full auto-scan
   fullScan: () => ipcRenderer.invoke('full-scan'),
 
@@ -30,5 +46,9 @@ contextBridge.exposeInMainWorld('sstools', {
 
   // Utilities
   openExternal: (url) => ipcRenderer.invoke('open-external', url),
-  exportReport: (reportData) => ipcRenderer.invoke('export-report', reportData)
+  exportReport: (reportData) => ipcRenderer.invoke('export-report', reportData),
+
+  // Event listeners
+  onTriggerFullScan: (callback) => ipcRenderer.on('trigger-full-scan', callback),
+  onAdminStatus: (callback) => ipcRenderer.on('admin-status', (_event, status) => callback(status))
 });

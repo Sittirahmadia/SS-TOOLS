@@ -1,7 +1,7 @@
 {
   "name": "ss-tools",
-  "version": "1.0.0",
-  "description": "SS-TOOLS — Minecraft Cheat Detection Scanner for PC",
+  "version": "2.0.0",
+  "description": "SS-TOOLS v2.0 -- Minecraft SS AntiCheat Scanner for Windows",
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
@@ -18,9 +18,9 @@
     "electron-builder": "^24.9.1"
   },
   "build": {
-    "appId": "com.sstools.cheatdetector",
+    "appId": "com.sstools.anticheat",
     "productName": "SS-TOOLS",
-    "copyright": "SS-TOOLS by Sittirahmadia",
+    "copyright": "SS-TOOLS v2.0 by Sittirahmadia",
     "directories": {
       "output": "dist"
     },
@@ -34,6 +34,7 @@
     ],
     "win": {
       "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
       "target": [
         {
           "target": "nsis",
@@ -48,13 +49,16 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "SS-TOOLS"
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico",
+      "menuCategory": "SS-TOOLS",
+      "shortcutName": "SS-TOOLS AntiCheat Scanner"
     },
     "portable": {
-      "artifactName": "SS-TOOLS-portable.exe"
-    },
-    "asar": true
-  }
+      "artifactName": "SS-TOOLS-v${version}-Portable.exe"
+    }
+  },
+  "author": "Sittirahmadia",
+  "license": "MIT"
 }

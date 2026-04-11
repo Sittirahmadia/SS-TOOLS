@@ -1,5 +1,6 @@
 /**
- * Scanner Index — exports all scanner modules
+ * Scanner Index -- exports all scanner modules
+ * SS-TOOLS v2.0 Enhanced
  */
 
 const modScanner = require('./mod-scanner');
@@ -8,6 +9,12 @@ const processScanner = require('./process-scanner');
 const deletedFileScanner = require('./deleted-file-scanner');
 const launcherDetector = require('./launcher-detector');
 const stringScanner = require('./string-scanner');
+const mouseScanner = require('./mouse-scanner');
+const browserScanner = require('./browser-scanner');
+const kernelScanner = require('./kernel-scanner');
+const dllScanner = require('./dll-scanner');
+const jarScanner = require('./jar-scanner');
+const reportGenerator = require('./report-generator');
 
 module.exports = {
   modScanner,
@@ -15,5 +22,11 @@ module.exports = {
   processScanner,
   deletedFileScanner,
   launcherDetector,
-  stringScanner
+  stringScanner,
+  mouseScanner,
+  browserScanner,
+  kernelScanner,
+  dllScanner,
+  jarScanner,
+  reportGenerator
 };
